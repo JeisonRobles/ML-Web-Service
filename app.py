@@ -1,6 +1,6 @@
 import pickle
 import numpy as np
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 
 path = '/Users/jeisonroblesarias/Documents/GitHub/APIa/'
 
@@ -9,6 +9,11 @@ with open(path + 'linear_regression_model.pkl', 'rb') as f:
     model, X_train, y_train= pickle.load(f)
 
 app = Flask(__name__)
+
+
+@app.route('/')
+def home():
+    return render_template('index.html')
 
 @app.route('/predict', methods=['POST'])
 def predict():

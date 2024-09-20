@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jeison's Prediction App</title>
+    <style> 
+        body { 
+            font-family: Arial, sans-serif;
+            margin: 50px;
+        }
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            text-align: center;
+        } 
+        input {
+            width: 95%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #cccccc;
+            border-radius: 5px;
+        } 
+        button {
+            width: 100%;
+            padding: 10px; 
+            background-color: #28a745;
+            color: white; border: none;
+            border-radius: 5px;
+            cursor: pointer; 
+        } 
+        button:hover { 
+            background-color: #218838; 
+        } 
+        #result { 
+            margin-top: 20px; 
+            text-align: center; 
+            font-size: 1.2em; 
+            color: #333; 
+        } 
+    </style> 
+</head> 
+<body> 
+    <div class="container"> 
+        <h1>Jeison's Prediction App</h1> 
+        <label for="inputValue">Enter a value for prediction:</label> 
+        <input type="number" id="inputValue" placeholder="Enter a number"> 
+        <button onclick="makePrediction()">Predict</button> 
+        
+        <div id="result"></div> 
+    </div> 
+    
+    <script> 
+        function makePrediction() { 
+            const inputValue = document.getElementById("inputValue").value; 
+            const resultDiv = document.getElementById("result"); 
+            
+            // Make sure input is valid 
+            if (!inputValue) { 
+                resultDiv.innerHTML = "Please enter a value."; 
+                return; 
+            } 
+            
+            // Clear previous result 
+            resultDiv.innerHTML = "Processing..."; 
+            
+            // Send POST request to the Flask API 
+            fetch('/predict', { 
+                method: 'POST', 
+                headers: { 
+                    'Content-Type': 'application/json' 
+                }, 
+                body: JSON.stringify({ input: parseFloat(inputValue) })
+            }) 
+            .then(response => response.json()) 
+            .then(data => { 
+                
+                // Display the prediction result 
+                if (data.prediction) { 
+                    resultDiv.innerHTML = `The predicted value is: ${data.prediction}`; 
+                } else { 
+                    resultDiv.innerHTML = "" + JSON.stringify(data); 
+                } 
+            }) 
+            .catch(error => { 
+                resultDiv.innerHTML = "An error occurred: " + error; 
+            }); 
+        } 
+    </script> 
+</body> 
+</html>
